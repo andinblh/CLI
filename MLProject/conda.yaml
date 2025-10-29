@@ -6,6 +6,8 @@ dependencies:
   - pip
   - pip:
       - mlflow
-      - scikit-learn
       - pandas
       - numpy
+      - scikit-learn
+      - matplotlib
+      - seaborn
