@@ -7,31 +7,69 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:   # biar bisa dijalankan manual dari tab Actions
 
 jobs:
   retrain:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # --- Step 1: Checkout repository ---
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Miniconda
+      # --- Step 2: Set up Miniconda ---
+      - name: 🐍 Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: MLProject/conda.yaml
           activate-environment: mlflow-env
+          auto-update-conda: true
+          use-mamba: true    # lebih cepat dan lebih stabil
+          miniforge-variant: Mambaforge
 
-      - name: Install MLflow
-        run: pip install --upgrade mlflow
-
-      - name: Run MLflow Project
+      # --- Step 3: Debugging info awal ---
+      - name: 🔍 Debug Environment Info
         run: |
-              cd MLProject
-              conda init bash
-              source ~/.bashrc
-              echo "🚀 Running MLflow project..."
-              mlflow run . -P data_path=housing_preprocessed
-              cd ..
-         
+          echo "=== Python & Conda Info ==="
+          which python
+          python --version
+          conda info
+          echo ""
+          echo "=== Conda Environments ==="
+          conda env list
+          echo ""
+          echo "=== Installed Packages ==="
+          pip list
+          echo ""
+          echo "=== MLProject Folder Structure ==="
+          ls -R MLProject
+          echo ""
+          echo "=== MLflow Version ==="
+          pip show mlflow || echo "MLflow not installed"
+      
+      # --- Step 4: Reinstall MLflow (jaga-jaga versi) ---
+      - name: ⚙️ Ensure MLflow Installed
+        run: |
+          echo "Reinstalling MLflow for compatibility..."
+          pip install --upgrade mlflow
 
+      # --- Step 5: Run MLflow project dengan logging detail ---
+      - name: 🚀 Run MLflow Project (with detailed logging)
+        run: |
+          set -e  # stop kalau error
+          cd MLProject
+          echo "=== Start MLflow run ==="
+          mlflow --version
+          echo "Executing MLflow project..."
+          mlflow run . -P data_path=house_preprocessing.csv -v
+          echo "=== MLflow run completed ==="
+          cd ..
+
+      # --- Step 6: Tambahan logging kalau error ---
+      - name: 🧾 Print Conda Logs (if available)
+        if: failure()
+        run: |
+          echo "=== Conda logs (if exist) ==="
+          find /usr/share/miniconda/ -type f -name "*.log" | xargs -I {} sh -c 'echo "--- {} ---"; cat "{}"; echo ""'
+          echo "=== End of Conda logs ==="
