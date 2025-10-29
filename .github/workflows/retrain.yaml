@@ -25,8 +25,9 @@ jobs:
           environment-file: MLProject/conda.yaml
           activate-environment: mlflow-env
           auto-update-conda: true
-          use-mamba: true    # lebih cepat dan lebih stabil
-          miniforge-variant: Mambaforge
+          use-mamba: true
+          miniforge-variant: Miniforge3   # ✅ GANTI INI
+          channels: conda-forge,defaults
 
       # --- Step 3: Debugging info awal ---
       - name: 🔍 Debug Environment Info
