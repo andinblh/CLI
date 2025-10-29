@@ -63,7 +63,7 @@ jobs:
           echo "=== Start MLflow run ==="
           mlflow --version
           echo "Executing MLflow project..."
-          mlflow run . -P data_path=housing_preprocessed.csv
+          mlflow run . -P data_path=housing_preprocessed.csv --verbose
           echo "=== MLflow run completed ==="
           cd ..
 
