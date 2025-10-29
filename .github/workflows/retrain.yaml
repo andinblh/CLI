@@ -2,11 +2,9 @@ name: Retrain ML Model
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   retrain:
@@ -27,11 +25,8 @@ jobs:
 
       - name: Run MLflow Project
         run: |
-              cd MLProject
-              conda init bash
-              source ~/.bashrc
-              echo "🚀 Running MLflow project..."
-              mlflow run . -P data_path=housing_preprocessed
-              cd ..
-         
-
+          set -e
+          cd MLProject
+          echo "🚀 Running MLflow project..."
+          mlflow run . -P data_path=housing_preprocessed.csv
+          cd ..
