@@ -1,7 +1,5 @@
 name: houseprice_retrain
 
-conda_env: conda.yaml
-
 entry_points:
   main:
     parameters:
