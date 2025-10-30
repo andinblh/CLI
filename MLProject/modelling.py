@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--data_path", type=str, default="housing_preprocessed.csv")
 args = parser.parse_args()
 
+print(f"Loading dataset from: {args.data_path}")
+
 # --- Load dataset ---
 data_path = os.path.join(os.path.dirname(__file__), args.data_path)
 df = pd.read_csv(data_path)
@@ -28,10 +30,12 @@ model.fit(X_train, y_train)
 
 # --- Evaluate ---
 score = model.score(X_test, y_test)
-print(f"Model R^2 Score: {score}")
+print(f"✅ Model R^2 Score: {score}")
 
 # --- Log ke MLflow ---
 with mlflow.start_run():
     mlflow.log_param("data_path", args.data_path)
     mlflow.log_metric("r2_score", score)
     mlflow.sklearn.log_model(model, "model")
+
+print("Training complete and model logged to MLflow.")
