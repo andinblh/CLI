@@ -15,11 +15,14 @@ print(f"Loading dataset from: {args.data_path}")
 
 # --- Load dataset ---
 data_path = os.path.join(os.path.dirname(__file__), args.data_path)
-df = pd.read_csv(data_path)
 
-# Misal kolom terakhir adalah target
-X = df.drop("target", axis=1)
-y = df["target"]
+df = pd.read_csv(data_path)
+print("Loading dataset from:", data_path)
+
+# ubah 'target' jadi kolom yang benar
+X = df.drop("median_house_value", axis=1)
+y = df["median_house_value"]
+
 
 # --- Split data ---
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
